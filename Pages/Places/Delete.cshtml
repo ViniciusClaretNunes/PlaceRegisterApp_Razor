@@ -1,0 +1,18 @@
+@page "{id:int}"
+@model DeleteModel
+@{
+    ViewData["Title"] = "Remover Local";
+}
+
+<div>
+    <p>Confirma remoção do local:</p>
+    <div class="place-detail">
+        <strong>@Model.Place.Name</strong>
+        <div>@Model.Place.Address</div>
+        <p>@Model.Place.Description</p>
+    </div>
+    <form method="post">
+        <button type="submit">Confirmar remoção</button>
+        <a href="/">Cancelar</a>
+    </form>
+</div>

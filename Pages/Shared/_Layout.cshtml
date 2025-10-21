@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>@ViewData["Title"] - Cadastro de Locais</title>
+  <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+  <header>
+    <nav class="topnav">
+      <a href="/">Início</a>
+      <a href="/Places/Create">Cadastrar Local</a>
+    </nav>
+  </header>
+  <main class="container">
+    <h1>@ViewData["Title"]</h1>
+    <section>
+      @RenderBody()
+    </section>
+  </main>
+  <footer class="footer">
+    <small>&copy; Projeto Acessibilidade - @DateTime.UtcNow.Year</small>
+  </footer>
+</body>
+</html>

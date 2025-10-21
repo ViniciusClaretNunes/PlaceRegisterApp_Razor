@@ -1,0 +1,17 @@
+@page "{id:int}"
+@model DetailsModel
+@{
+    ViewData["Title"] = "Detalhes do Local";
+}
+
+<div class="place-detail">
+    <img src="@(Model.Place.ImageFile != null ? Url.Content($"~/uploads/{Model.Place.ImageFile}") : "/images/placeholder.png")" alt="@Model.Place.Name" />
+    <div>
+        <strong>@Model.Place.Name</strong>
+        <div class="rating">Avaliação: @Model.Place.Rating ★</div>
+        <div>@Model.Place.Address</div>
+        <p>@Model.Place.Description</p>
+        <small>Recursos: @Model.Place.Features</small>
+    </div>
+    <p><a href="/">Voltar</a></p>
+</div>

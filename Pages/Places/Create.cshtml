@@ -1,0 +1,40 @@
+@page
+@model CreateModel
+@{
+    ViewData["Title"] = "Cadastrar Local";
+}
+
+<form method="post" enctype="multipart/form-data" class="form">
+    <div asp-validation-summary="ModelOnly"></div>
+
+    <label>Nome
+        <input asp-for="Place.Name" />
+        <span asp-validation-for="Place.Name"></span>
+    </label>
+
+    <label>Endereço
+        <input asp-for="Place.Address" />
+        <span asp-validation-for="Place.Address"></span>
+    </label>
+
+    <label>Descrição
+        <textarea asp-for="Place.Description"></textarea>
+        <span asp-validation-for="Place.Description"></span>
+    </label>
+
+    <label>Recursos
+        <input asp-for="Place.Features" />
+    </label>
+
+    <label>Avaliação (0-5)
+        <input asp-for="Place.Rating" type="number" min="0" max="5" />
+        <span asp-validation-for="Place.Rating"></span>
+    </label>
+
+    <label>Imagem
+        <input asp-for="ImageFile" type="file" />
+        <span asp-validation-for="ImageFile"></span>
+    </label>
+
+    <button type="submit">Cadastrar</button>
+</form>

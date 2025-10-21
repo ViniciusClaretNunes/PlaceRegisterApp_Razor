@@ -1,0 +1,45 @@
+@page "{id:int}"
+@model EditModel
+@{
+    ViewData["Title"] = "Editar Local";
+}
+
+<form method="post" enctype="multipart/form-data" class="form">
+    <input type="hidden" asp-for="Place.Id" />
+    <div asp-validation-summary="ModelOnly"></div>
+
+    <label>Nome
+        <input asp-for="Place.Name" />
+        <span asp-validation-for="Place.Name"></span>
+    </label>
+
+    <label>Endereço
+        <input asp-for="Place.Address" />
+        <span asp-validation-for="Place.Address"></span>
+    </label>
+
+    <label>Descrição
+        <textarea asp-for="Place.Description"></textarea>
+        <span asp-validation-for="Place.Description"></span>
+    </label>
+
+    <label>Recursos
+        <input asp-for="Place.Features" />
+    </label>
+
+    <label>Avaliação (0-5)
+        <input asp-for="Place.Rating" type="number" min="0" max="5" />
+        <span asp-validation-for="Place.Rating"></span>
+    </label>
+
+    <div>
+        <p>Imagem atual:</p>
+        <img src="@(Model.Place.ImageFile != null ? Url.Content($"~/uploads/{Model.Place.ImageFile}") : "/images/placeholder.png")" alt="Imagem" style="max-width:200px" />
+    </div>
+
+    <label>Substituir imagem
+        <input asp-for="ImageFile" type="file" />
+    </label>
+
+    <button type="submit">Salvar alterações</button>
+</form>

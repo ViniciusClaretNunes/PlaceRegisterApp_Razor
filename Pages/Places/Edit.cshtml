@@ -1,4 +1,5 @@
 @page "{id:int}"
+@using System.Linq
 @model EditModel
 @{
     ViewData["Title"] = "Editar Local";
@@ -28,18 +29,65 @@
     </label>
 
     <label>Avaliação (1-5)
-        <input asp-for="Place.Rating" type="number" min="1" max="5" step="1" />
+        <input asp-for="Place.Rating" type="number" min="1" max="5" step="1" inputmode="numeric" />
         <span asp-validation-for="Place.Rating"></span>
     </label>
 
     <div>
-        <p>Imagem atual:</p>
-        <img src="@(Model.Place.ImageFile != null ? Url.Content($"~/uploads/{Model.Place.ImageFile}") : "/images/placeholder.png")" alt="Imagem" style="max-width:200px" />
+        <p>Imagens atuais:</p>
+        @if (Model.Place.ImageFiles.Any())
+        {
+            <div class="image-preview-grid">
+                @foreach (var file in Model.Place.ImageFiles)
+                {
+                    <img src="@Url.Content($"~/uploads/{file}")" alt="@Model.Place.Name" />
+                }
+            </div>
+        }
+        else
+        {
+            <p class="empty-state">Nenhuma imagem cadastrada.</p>
+        }
     </div>
 
-    <label>Substituir imagem
-        <input asp-for="ImageFile" type="file" />
+    <label>Substituir imagens (máx. 3)
+        <input asp-for="ImageFiles" type="file" multiple accept="image/*" />
+        <span asp-validation-for="ImageFiles"></span>
     </label>
 
     <button type="submit">Salvar alterações</button>
 </form>
+
+<script>
+(() => {
+    const ratingInput = document.querySelector('input[name="Place.Rating"]');
+    if (ratingInput) {
+        ratingInput.addEventListener('input', () => {
+            if (!ratingInput.value) return;
+            const numeric = ratingInput.value.replace(/[^0-9]/g, '');
+            if (numeric !== ratingInput.value) {
+                ratingInput.value = numeric;
+            }
+            let value = parseInt(ratingInput.value || '0', 10);
+            if (Number.isNaN(value)) {
+                ratingInput.value = '';
+                return;
+            }
+            if (value > 5) value = 5;
+            if (value < 1) value = 1;
+            ratingInput.value = value.toString();
+        });
+    }
+
+    const imageInput = document.querySelector('input[name="ImageFiles"]');
+    if (imageInput) {
+        imageInput.addEventListener('change', () => {
+            const count = imageInput.files ? imageInput.files.length : 0;
+            if (count > 3) {
+                alert('Envie no máximo 3 imagens.');
+                imageInput.value = '';
+            }
+        });
+    }
+})();
+</script>

@@ -20,7 +20,8 @@ else
         @foreach (var p in Model.Places.OrderByDescending(x => x.CreatedAt))
         {
             <article class="place">
-                <img src="@(p.ImageFile != null ? Url.Content($"~/uploads/{p.ImageFile}") : "/images/placeholder.png")" alt="@p.Name" />
+                @{ var cover = p.ImageFiles.FirstOrDefault(); }
+                <img src="@(cover != null ? Url.Content($"~/uploads/{cover}") : "/images/placeholder.png")" alt="@p.Name" />
                 <div class="meta">
                     <strong>@p.Name</strong>
                     <div class="rating">Avaliação: @p.Rating ★</div>

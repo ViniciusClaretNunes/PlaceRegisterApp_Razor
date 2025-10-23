@@ -1,35 +1,18 @@
 @page
 @model IndexModel
 @{
-    ViewData["Title"] = "Locais";
+    ViewData["Title"] = "Início";
 }
-<div>
-    <p>Lista de locais cadastrados:</p>
-    @if (!Model.Places.Any())
-    {
-        <p>Nenhum local cadastrado.</p>
-    }
-    else
-    {
-        <div class="places">
-            @foreach (var p in Model.Places.OrderByDescending(x=>x.CreatedAt))
-            {
-                <article class="place">
-                    <img src="@(p.ImageFile != null ? Url.Content($"~/uploads/{p.ImageFile}") : "/images/placeholder.png")" alt="@p.Name" />
-                    <div class="meta">
-                        <strong>@p.Name</strong>
-                        <div class="rating">Avaliação: @p.Rating ★</div>
-                        <div>@p.Address</div>
-                        <p>@p.Description</p>
-                        <small>Recursos: @p.Features</small>
-                        <div class="actions">
-                            <a href="/Places/Edit/@p.Id">Editar</a> |
-                            <a href="/Places/Delete/@p.Id">Remover</a> |
-                            <a href="/Places/Details/@p.Id">Detalhes</a>
-                        </div>
-                    </div>
-                </article>
-            }
+<section class="hero">
+    <div class="hero-content">
+        <h2>Bem-vindo ao Cadastro de Locais Acessíveis</h2>
+        <p>Cadastre e acompanhe locais com recursos de acessibilidade para ajudar outras pessoas a encontrarem os melhores lugares.</p>
+        <div class="hero-actions">
+            <a class="btn" href="/Places/Create">Cadastrar novo local</a>
+            <a class="btn secondary" href="/Places">Ver locais cadastrados</a>
         </div>
-    }
-</div>
+    </div>
+    <div class="hero-illustration">
+        <img src="/images/placeholder.png" alt="Ilustração de acessibilidade" />
+    </div>
+</section>

@@ -1,0 +1,39 @@
+@page
+@using System.Linq
+@model PlacesIndexModel
+@{
+    ViewData["Title"] = "Locais Cadastrados";
+}
+
+<section class="places-header">
+    <h2>Locais cadastrados recentemente</h2>
+    <p>Gerencie e visualize todos os locais registrados no sistema.</p>
+</section>
+
+@if (!Model.Places.Any())
+{
+    <p class="empty-state">Nenhum local cadastrado.</p>
+}
+else
+{
+    <div class="places-list">
+        @foreach (var p in Model.Places.OrderByDescending(x => x.CreatedAt))
+        {
+            <article class="place">
+                <img src="@(p.ImageFile != null ? Url.Content($"~/uploads/{p.ImageFile}") : "/images/placeholder.png")" alt="@p.Name" />
+                <div class="meta">
+                    <strong>@p.Name</strong>
+                    <div class="rating">Avaliação: @p.Rating ★</div>
+                    <div>@p.Address</div>
+                    <p>@p.Description</p>
+                    <small>Recursos: @p.Features</small>
+                    <div class="actions">
+                        <a href="/Places/Details/@p.Id">Detalhes</a>
+                        <a href="/Places/Edit/@p.Id">Editar</a>
+                        <a href="/Places/Delete/@p.Id">Remover</a>
+                    </div>
+                </div>
+            </article>
+        }
+    </div>
+}

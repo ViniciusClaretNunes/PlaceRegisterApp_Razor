@@ -27,8 +27,8 @@
         <input asp-for="Place.Features" />
     </label>
 
-    <label>Avaliação (0-5)
-        <input asp-for="Place.Rating" type="number" min="0" max="5" />
+    <label>Avaliação (1-5)
+        <input asp-for="Place.Rating" type="number" min="1" max="5" step="1" />
         <span asp-validation-for="Place.Rating"></span>
     </label>
 

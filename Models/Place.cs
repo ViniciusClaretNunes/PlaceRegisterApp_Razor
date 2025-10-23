@@ -20,7 +20,7 @@ namespace PlaceRegisterApp_Razor.Models
         [StringLength(250)]
         public string? Features { get; set; }
 
-        [Range(0,5)]
+        [Range(1,5, ErrorMessage = "A avaliação deve ser um número entre 1 e 5.")]
         public int Rating { get; set; }
 
         public string? ImageFile { get; set; }

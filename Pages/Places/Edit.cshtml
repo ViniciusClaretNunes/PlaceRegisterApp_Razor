@@ -40,7 +40,7 @@
             <div class="image-preview-grid">
                 @foreach (var file in Model.Place.ImageFiles)
                 {
-                    <img src="@Url.Content($"~/uploads/{file}")" alt="@Model.Place.Name" />
+                    <img class="image-preview-thumb" src="@Url.Content($"~/uploads/{file}")" alt="@Model.Place.Name" />
                 }
             </div>
         }

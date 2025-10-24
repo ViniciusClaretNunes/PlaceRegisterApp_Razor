@@ -19,9 +19,23 @@ else
     <div class="places-list">
         @foreach (var p in Model.Places.OrderByDescending(x => x.CreatedAt))
         {
+            @{ var galleryFiles = p.ImageFiles.Take(3).ToList();
+               while (galleryFiles.Count < 3)
+               {
+                   galleryFiles.Add(string.Empty);
+               }
+            }
+
             <article class="place">
-                @{ var cover = p.ImageFiles.FirstOrDefault(); }
-                <img src="@(cover != null ? Url.Content($"~/uploads/{cover}") : "/images/placeholder.png")" alt="@p.Name" />
+                <div class="place-gallery">
+                    @foreach (var file in galleryFiles)
+                    {
+                        var src = string.IsNullOrEmpty(file)
+                            ? Url.Content("~/images/placeholder.png")
+                            : Url.Content($"~/uploads/{file}");
+                        <img class="place-gallery-thumb" src="@src" alt="@p.Name" />
+                    }
+                </div>
                 <div class="meta">
                     <strong>@p.Name</strong>
                     <div class="rating">Avaliação: @p.Rating ★</div>

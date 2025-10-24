@@ -1,0 +1,72 @@
+@page
+@using System.Collections.Generic
+@using System.Linq
+@model PlacesIndexModel
+@{
+    ViewData["Title"] = "Locais Cadastrados";
+}
+
+<section class="places-header">
+    <h2>Locais cadastrados recentemente</h2>
+    <p>Gerencie e visualize todos os locais registrados no sistema.</p>
+</section>
+
+@if (!Model.Places.Any())
+{
+    <p class="empty-state">Nenhum local cadastrado.</p>
+}
+else
+{
+    <div class="places-list">
+        @foreach (var p in Model.Places.OrderByDescending(x => x.CreatedAt))
+        {
+            @{
+                var galleryFiles = new List<string>();
+                if (p.ImageFiles != null)
+                {
+                    foreach (var image in p.ImageFiles)
+                    {
+                        if (!string.IsNullOrWhiteSpace(image))
+                        {
+                            galleryFiles.Add(image);
+                        }
+                    }
+                }
+
+                if (galleryFiles.Count > 3)
+                {
+                    galleryFiles.RemoveRange(3, galleryFiles.Count - 3);
+                }
+
+                while (galleryFiles.Count < 3)
+                {
+                    galleryFiles.Add(string.Empty);
+                }
+            }
+
+            <article class="place">
+                <div class="place-gallery">
+                    @foreach (var file in galleryFiles)
+                    {
+                        var src = string.IsNullOrEmpty(file)
+                            ? Url.Content("~/images/placeholder.png")
+                            : Url.Content($"~/uploads/{file}");
+                        <img class="place-gallery-thumb" src="@src" alt="@p.Name" />
+                    }
+                </div>
+                <div class="meta">
+                    <strong>@p.Name</strong>
+                    <div class="rating">Avaliação: @p.Rating ★</div>
+                    <div>@p.Address</div>
+                    <p>@p.Description</p>
+                    <small>Recursos: @p.Features</small>
+                    <div class="actions">
+                        <a href="/Places/Details/@p.Id">Detalhes</a>
+                        <a href="/Places/Edit/@p.Id">Editar</a>
+                        <a href="/Places/Delete/@p.Id">Remover</a>
+                    </div>
+                </div>
+            </article>
+        }
+    </div>
+}

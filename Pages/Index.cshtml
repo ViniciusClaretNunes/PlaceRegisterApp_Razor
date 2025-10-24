@@ -1,35 +1,7 @@
 @page
 @model IndexModel
 @{
-    ViewData["Title"] = "Locais";
+    ViewData["Title"] = "Acessibilidade Urbana";
 }
-<div>
-    <p>Lista de locais cadastrados:</p>
-    @if (!Model.Places.Any())
-    {
-        <p>Nenhum local cadastrado.</p>
-    }
-    else
-    {
-        <div class="places">
-            @foreach (var p in Model.Places.OrderByDescending(x=>x.CreatedAt))
-            {
-                <article class="place">
-                    <img src="@(p.ImageFile != null ? Url.Content($"~/uploads/{p.ImageFile}") : "/images/placeholder.png")" alt="@p.Name" />
-                    <div class="meta">
-                        <strong>@p.Name</strong>
-                        <div class="rating">Avaliação: @p.Rating ★</div>
-                        <div>@p.Address</div>
-                        <p>@p.Description</p>
-                        <small>Recursos: @p.Features</small>
-                        <div class="actions">
-                            <a href="/Places/Edit/@p.Id">Editar</a> |
-                            <a href="/Places/Delete/@p.Id">Remover</a> |
-                            <a href="/Places/Details/@p.Id">Detalhes</a>
-                        </div>
-                    </div>
-                </article>
-            }
-        </div>
-    }
-</div>
+
+<p class="home-message">Acessibilidade Urbana</p>

@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PlaceRegisterApp_Razor.Data;
 using PlaceRegisterApp_Razor.Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 public class EditModel : PageModel
 {
@@ -14,7 +18,7 @@ public class EditModel : PageModel
     public Place Place { get; set; } = new Place();
 
     [BindProperty]
-    public IFormFile? ImageFile { get; set; }
+    public List<IFormFile> ImageFiles { get; set; } = new();
 
     public async Task<IActionResult> OnGetAsync(int id)
     {
@@ -37,30 +41,60 @@ public class EditModel : PageModel
         p.Features = Place.Features;
         p.Rating = Place.Rating;
 
-        if (ImageFile != null && ImageFile.Length > 0)
+        var uploads = Path.Combine(_env.WebRootPath, "uploads");
+        Directory.CreateDirectory(uploads);
+
+        var selectedFiles = ImageFiles?
+            .Where(f => f != null && f.Length > 0)
+            .ToList() ?? new List<IFormFile>();
+
+        if (selectedFiles.Count > 3)
         {
-            var ext = Path.GetExtension(ImageFile.FileName).ToLowerInvariant();
+            ModelState.AddModelError("ImageFiles", "Envie no máximo 3 imagens.");
+        }
+
+        foreach (var file in selectedFiles)
+        {
+            if (file.Length > 5 * 1024 * 1024)
+            {
+                ModelState.AddModelError("ImageFiles", "Cada imagem deve ter no máximo 5 MB.");
+                break;
+            }
+
+            var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
             var allowed = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
             if (!allowed.Contains(ext))
             {
-                ModelState.AddModelError("ImageFile", "Formato de imagem não suportado.");
-                return Page();
+                ModelState.AddModelError("ImageFiles", "Formato de imagem não suportado.");
+                break;
             }
-            var uploads = Path.Combine(_env.WebRootPath, "uploads");
-            Directory.CreateDirectory(uploads);
-            var savedName = $"{Guid.NewGuid()}{ext}";
-            var filePath = Path.Combine(uploads, savedName);
-            await using var stream = System.IO.File.Create(filePath);
-            await ImageFile.CopyToAsync(stream);
+        }
 
-            // delete old file if exists
-            if (!string.IsNullOrEmpty(p.ImageFile))
+        if (!ModelState.IsValid) return Page();
+
+        if (selectedFiles.Count > 0)
+        {
+            foreach (var existing in p.ImageFiles)
             {
-                var oldPath = Path.Combine(uploads, p.ImageFile);
+                var oldPath = Path.Combine(uploads, existing);
                 if (System.IO.File.Exists(oldPath))
+                {
                     System.IO.File.Delete(oldPath);
+                }
             }
-            p.ImageFile = savedName;
+
+            var savedNames = new List<string>();
+            foreach (var file in selectedFiles)
+            {
+                var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+                var savedName = $"{Guid.NewGuid()}{ext}";
+                var path = Path.Combine(uploads, savedName);
+                await using var stream = System.IO.File.Create(path);
+                await file.CopyToAsync(stream);
+                savedNames.Add(savedName);
+            }
+
+            p.SetImageFiles(savedNames);
         }
 
         await _db.SaveChangesAsync();

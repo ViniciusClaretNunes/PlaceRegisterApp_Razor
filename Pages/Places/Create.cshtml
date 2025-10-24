@@ -26,15 +26,48 @@
         <input asp-for="Place.Features" />
     </label>
 
-    <label>Avaliação (0-5)
-        <input asp-for="Place.Rating" type="number" min="0" max="5" />
+    <label>Avaliação (1-5)
+        <input asp-for="Place.Rating" type="number" min="1" max="5" step="1" inputmode="numeric" />
         <span asp-validation-for="Place.Rating"></span>
     </label>
 
-    <label>Imagem
-        <input asp-for="ImageFile" type="file" />
-        <span asp-validation-for="ImageFile"></span>
+    <label>Imagens (máx. 3)
+        <input asp-for="ImageFiles" type="file" multiple accept="image/*" />
+        <span asp-validation-for="ImageFiles"></span>
     </label>
 
     <button type="submit">Cadastrar</button>
 </form>
+
+<script>
+(() => {
+    const ratingInput = document.querySelector('input[name="Place.Rating"]');
+    if (ratingInput) {
+        ratingInput.addEventListener('input', () => {
+            if (!ratingInput.value) return;
+            const numeric = ratingInput.value.replace(/[^0-9]/g, '');
+            if (numeric !== ratingInput.value) {
+                ratingInput.value = numeric;
+            }
+            let value = parseInt(ratingInput.value || '0', 10);
+            if (Number.isNaN(value)) {
+                ratingInput.value = '';
+                return;
+            }
+            if (value > 5) value = 5;
+            if (value < 1) value = 1;
+            ratingInput.value = value.toString();
+        });
+    }
+
+    const imageInput = document.querySelector('input[name="ImageFiles"]');
+    if (imageInput) {
+        imageInput.addEventListener('change', () => {
+            if (imageInput.files && imageInput.files.length > 3) {
+                alert('Envie no máximo 3 imagens.');
+                imageInput.value = '';
+            }
+        });
+    }
+})();
+</script>

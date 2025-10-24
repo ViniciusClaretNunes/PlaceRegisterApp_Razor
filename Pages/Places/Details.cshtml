@@ -1,17 +1,30 @@
 @page "{id:int}"
+@using System.Linq
 @model DetailsModel
 @{
     ViewData["Title"] = "Detalhes do Local";
 }
 
 <div class="place-detail">
-    <img src="@(Model.Place.ImageFile != null ? Url.Content($"~/uploads/{Model.Place.ImageFile}") : "/images/placeholder.png")" alt="@Model.Place.Name" />
-    <div>
+    <div class="detail-gallery">
+        @if (Model.Place.ImageFiles.Any())
+        {
+            @foreach (var file in Model.Place.ImageFiles)
+            {
+                <img src="@Url.Content($"~/uploads/{file}")" alt="@Model.Place.Name" />
+            }
+        }
+        else
+        {
+            <img src="/images/placeholder.png" alt="Imagem indisponível" />
+        }
+    </div>
+    <div class="detail-content">
         <strong>@Model.Place.Name</strong>
         <div class="rating">Avaliação: @Model.Place.Rating ★</div>
         <div>@Model.Place.Address</div>
         <p>@Model.Place.Description</p>
         <small>Recursos: @Model.Place.Features</small>
+        <p class="detail-actions"><a href="/">Voltar</a></p>
     </div>
-    <p><a href="/">Voltar</a></p>
 </div>

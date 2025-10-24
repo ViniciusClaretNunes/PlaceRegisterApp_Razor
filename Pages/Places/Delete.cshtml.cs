@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PlaceRegisterApp_Razor.Data;
+using System.IO;
 
 public class DeleteModel : PageModel
 {
@@ -24,10 +25,12 @@ public class DeleteModel : PageModel
         if (p == null) return RedirectToPage("/Index");
 
         // delete image
-        if (!string.IsNullOrEmpty(p.ImageFile))
+        var uploads = Path.Combine(_env.WebRootPath, "uploads");
+        Directory.CreateDirectory(uploads);
+
+        foreach (var image in p.ImageFiles)
         {
-            var uploads = Path.Combine(_env.WebRootPath, "uploads");
-            var path = Path.Combine(uploads, p.ImageFile);
+            var path = Path.Combine(uploads, image);
             if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
         }
 

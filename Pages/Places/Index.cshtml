@@ -1,4 +1,5 @@
 @page
+@using System.Collections.Generic
 @using System.Linq
 @model PlacesIndexModel
 @{
@@ -19,11 +20,17 @@ else
     <div class="places-list">
         @foreach (var p in Model.Places.OrderByDescending(x => x.CreatedAt))
         {
-            @{ var galleryFiles = p.ImageFiles.Take(3).ToList();
-               while (galleryFiles.Count < 3)
-               {
-                   galleryFiles.Add(string.Empty);
-               }
+            @{
+                var galleryFiles = p.ImageFiles?.ToList() ?? new List<string>();
+                if (galleryFiles.Count > 3)
+                {
+                    galleryFiles = galleryFiles.GetRange(0, 3);
+                }
+
+                while (galleryFiles.Count < 3)
+                {
+                    galleryFiles.Add(string.Empty);
+                }
             }
 
             <article class="place">

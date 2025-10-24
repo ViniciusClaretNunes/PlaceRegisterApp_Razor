@@ -21,10 +21,21 @@ else
         @foreach (var p in Model.Places.OrderByDescending(x => x.CreatedAt))
         {
             @{
-                var galleryFiles = p.ImageFiles?.ToList() ?? new List<string>();
+                var galleryFiles = new List<string>();
+                if (p.ImageFiles != null)
+                {
+                    foreach (var image in p.ImageFiles)
+                    {
+                        if (!string.IsNullOrWhiteSpace(image))
+                        {
+                            galleryFiles.Add(image);
+                        }
+                    }
+                }
+
                 if (galleryFiles.Count > 3)
                 {
-                    galleryFiles = galleryFiles.GetRange(0, 3);
+                    galleryFiles.RemoveRange(3, galleryFiles.Count - 3);
                 }
 
                 while (galleryFiles.Count < 3)
